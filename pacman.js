@@ -50,6 +50,11 @@ window.onload = function() {
     context = board.getContext("2d");
 
     loadImages();
+    loadMap();
+    console.log(walls.size);
+    console.log(foods.size);
+    console.log(ghosts.size);
+    update();
 }
 
 const tileMap = [
@@ -87,19 +92,59 @@ function loadMap() {
     foods.clear();
     ghosts.clear();
 
-    for (let row = 0; row < rowCount; row++) {
+    for (let r = 0; r < rowCount; r++) {
         for (let col = 0; col < colCount; col++) {
-            const row = tileMap[row];
+            const row = tileMap[r];
             const tileMapChar = row[col];
 
             const x = col * tileSize;
-            const y = row * tileSize;
-
+            const y = r * tileSize;
             if (tileMapChar === "X") {
                 const wall = new Block(wallImage, x, y, tileSize, tileSize);
                 walls.add(wall);
             }
+            else if (tileMapChar === "b") {
+                const blueGhost = new Block(blueGhostImage, x, y, tileSize, tileSize);
+                ghosts.add(blueGhost);
+            }
+            else if (tileMapChar === "o") {
+                const orangeGhost = new Block(orangeGhostImage, x, y, tileSize, tileSize);
+                ghosts.add(orangeGhost);
+            }
+            else if (tileMapChar === "p") {
+                const pinkGhost = new Block(pinkGhostImage, x, y, tileSize, tileSize);
+                ghosts.add(pinkGhost);
+            }
+            else if (tileMapChar === "r") {
+                const redGhost = new Block(redGhostImage, x, y, tileSize, tileSize);
+                ghosts.add(redGhost);
+            }
+            else if (tileMapChar === "P") {
+                pacman = new Block(pacmanRightImage, x, y, tileSize, tileSize);
+            }
+            else if (tileMapChar === " ") {
+                const food = new Block(null, x + 14, y + 14, 4, 4);
+                foods.add(food);
+            }
         }
+    }
+}
+
+function update() {
+    draw();
+    setTimeout(update, 50);
+}
+function draw() {
+    context.drawImage(pacman.image, pacman.x, pacman.y, pacman.width, pacman.height);
+    for(let ghost of ghosts.values()) {
+        context.drawImage(ghost.image, ghost.x, ghost.y, ghost.width, ghost.height);
+    }
+    for(let wall of walls.values()) {
+        context.drawImage(wall.image, wall.x, wall.y, wall.width, wall.height);
+    }
+    context.fillStyle = "white";
+    for(let food of foods.values()) {
+        context.fillRect(food.x, food.y, food.width, food.height);
     }
 }
 
@@ -115,3 +160,4 @@ class Block {
         this.startY = y;
     }
 }
+
