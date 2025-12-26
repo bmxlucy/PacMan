@@ -91,8 +91,16 @@ function loadMap() {
         for (let col = 0; col < colCount; col++) {
             const row = tileMap[row];
             const tileMapChar = row[col];
-        }
 
+            const x = col * tileSize;
+            const y = row * tileSize;
+
+            if (tileMapChar === "X") {
+                const wall = new Block(wallImage, x, y, tileSize, tileSize);
+                walls.add(wall);
+            }
+        }
+    }
 }
 
 class Block {
